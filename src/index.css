@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+@theme {
+  --color-studio-forest: #1E4620;
+  --color-studio-forest-deep: #153316;
+  --color-studio-sage: #EFF3EB;
+  --color-studio-sage-border: #DCE5D5;
+  --color-studio-lime: #A3E635;
+  --color-studio-chassis: #0B121B;
+  --color-studio-chassis-panel: #0F1722;
+  --color-studio-chassis-border: #1E293B;
+
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #FCFCFA;
+    color: #111827;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Clean white-chassis range slider styling */
+input[type="range"].studio-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: #E2E8F0;
+  outline: none;
+}
+
+input[type="range"].studio-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1E4620;
+  border: 2px solid #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 0 0 1.5px rgba(30, 70, 32, 0.25);
+  transition: transform 0.12s ease;
+}
+
+input[type="range"].studio-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"].studio-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1E4620;
+  border: 2px solid #FFFFFF;
+  cursor: pointer;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F4F5F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5C0;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1E4620;
+}
+
+/* KaTeX typography refinement */
+.katex {
+  font-size: 1.02em;
+  text-transform: none !important;
+}
+.katex-display {
+  margin: 0.25rem 0;
+  text-transform: none !important;
+}
+
+/* Smooth current-pulse flow along circuit wires */
+@keyframes circuitDashFlow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.circuit-flow {
+  animation: circuitDashFlow var(--flow-dur, 1.1s) linear infinite;
+}
+
+.circuit-flow-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuit-flow {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   DARK MODE THEME (toggled via .dark-mode on <html>)
+   ============================================================================ */
+.dark-mode body,
+.dark-mode .bg-\[\#FCFCFA\] {
+  background-color: #0B121B !important;
+  color: #F1F5F9 !important;
+}
+
+.dark-mode .bg-white,
+.dark-mode .bg-white\/90 {
+  background-color: #0F1722 !important;
+}
+
+.dark-mode .bg-\[\#FAFAF8\],
+.dark-mode .bg-slate-50,
+.dark-mode .bg-slate-100 {
+  background-color: #162030 !important;
+}
+
+.dark-mode .bg-\[\#EFF3EB\] {
+  background-color: #132518 !important;
+}
+
+.dark-mode .border-slate-200,
+.dark-mode .border-slate-100,
+.dark-mode .border-\[\#DCE5D5\] {
+  border-color: #1E293B !important;
+}
+
+.dark-mode .text-\[\#111827\],
+.dark-mode .text-slate-900,
+.dark-mode .text-slate-800 {
+  color: #F1F5F9 !important;
+}
+
+.dark-mode .text-slate-700,
+.dark-mode .text-slate-600 {
+  color: #CBD5E1 !important;
+}
+
+.dark-mode .text-slate-500,
+.dark-mode .text-slate-400 {
+  color: #94A3B8 !important;
+}
+
+.dark-mode .text-\[\#1E4620\] {
+  color: #A3E635 !important;
+}
+
+.dark-mode .hover\:bg-slate-50:hover,
+.dark-mode .hover\:bg-white:hover {
+  background-color: #1E293B !important;
+}
+
+.dark-mode .hover\:bg-\[\#EFF3EB\]:hover {
+  background-color: #1A3320 !important;
+}
+
+.dark-mode input[type="range"].studio-slider {
+  background: #334155;
+}
+
+.dark-mode input[type="range"].studio-slider::-webkit-slider-thumb {
+  background: #A3E635;
+  border-color: #0F1722;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: #0B121B;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+/* Invert light-background oscilloscope/spectrum canvases & SVG schematics cleanly */
+.dark-mode canvas:not(.no-dark-invert),
+.dark-mode svg.w-full:not(.no-dark-invert) {
+  filter: invert(0.92) hue-rotate(180deg);
+  border-radius: 0.5rem;
+}
+
+.font-heading {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+

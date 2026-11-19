@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix ModuLab",
+  "description": "Interactive Communication Systems Modulation \u0026 Demodulation Engineering Laboratory with mathematical precision and scientific signal visualization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
