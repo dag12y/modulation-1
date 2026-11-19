@@ -1456,7 +1456,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
   ]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 md:px-7 py-4 space-y-4 max-w-[1560px] w-full mx-auto">
+    <div className="flex-1 overflow-y-auto px-3 md:px-7 py-4 space-y-4 max-w-[1560px] w-full mx-auto">
       {/* Compact Editorial Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-0.5">
@@ -1557,7 +1557,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
       ) : subTab !== 'equations' ? (
         <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           {/* Chassis Top Bar */}
-          <div className="px-4 py-2 bg-[#FAFAF8] border-b border-slate-200 flex items-center justify-between gap-4">
+          <div className="px-3 py-2 bg-[#FAFAF8] border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-500">
               <span>SIGNAL ANALYSIS</span>
               <span>/</span>
@@ -1565,7 +1565,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 text-[10px] font-mono">
+              <div className="hidden sm:flex items-center bg-white border border-slate-200 rounded-lg p-0.5 text-[10px] font-mono">
                 {([1, 2, 4] as const).map((z) => (
                   <button
                     key={z}
@@ -1594,12 +1594,12 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                 {plotExpanded ? (
                   <>
                     <Minimize2 className="w-3.5 h-3.5" />
-                    <span>Collapse</span>
+                    <span className="hidden sm:inline">Collapse</span>
                   </>
                 ) : (
                   <>
                     <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Expand</span>
+                    <span className="hidden sm:inline">Expand</span>
                   </>
                 )}
               </button>
@@ -1616,12 +1616,12 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                 {paramsCollapsed ? (
                   <>
                     <PanelRightOpen className="w-3.5 h-3.5" />
-                    <span>Show parameters</span>
+                    <span className="hidden sm:inline">Show parameters</span>
                   </>
                 ) : (
                   <>
                     <PanelRightClose className="w-3.5 h-3.5" />
-                    <span>Hide parameters</span>
+                    <span className="hidden sm:inline">Hide parameters</span>
                   </>
                 )}
               </button>
@@ -1634,7 +1634,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
             <div
               className={`${
                 paramsCollapsed ? 'lg:col-span-12' : 'lg:col-span-8 xl:col-span-9'
-              } p-4 md:p-5 space-y-4 bg-white`}
+              } order-2 lg:order-1 p-3 md:p-5 space-y-4 bg-white`}
             >
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
                 {/* Time Domain Oscilloscope */}
@@ -1966,7 +1966,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
 
             {/* RIGHT SIDEBAR: Collapsible Parameter Sidebar Side-by-Side */}
             {!paramsCollapsed && (
-              <aside className="lg:col-span-4 xl:col-span-3 bg-[#FAFAF8] border-t lg:border-t-0 lg:border-l border-slate-200 p-4 flex flex-col justify-between gap-4">
+              <aside className="order-1 lg:order-2 lg:col-span-4 xl:col-span-3 bg-[#FAFAF8] border-b lg:border-b-0 lg:border-l border-slate-200 p-4 flex flex-col justify-between gap-4">
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-xs font-bold text-[#111827]">
