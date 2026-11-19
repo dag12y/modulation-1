@@ -15,6 +15,7 @@ import {
   GitCompare,
   Sun,
   Moon,
+  Settings2,
 } from 'lucide-react';
 
 import { SimulationProvider, useSimulation } from './context/SimulationContext';
@@ -23,7 +24,6 @@ import { OverviewStudioView, StudioBenchTopic } from './views/studio/OverviewStu
 import { ExperimentBenchView } from './views/studio/ExperimentBenchView';
 import { ComparisonStudioView } from './views/studio/ComparisonStudioView';
 import { TheoryStudioView } from './views/studio/TheoryStudioView';
-import { LatexText } from './components/studio/Latex';
 
 type StudioRoute = 'overview' | 'bench' | 'comparison' | 'theory';
 
@@ -92,7 +92,8 @@ const TOPIC_DISPLAY: Record<StudioBenchTopic, string> = {
 
 function AppContent() {
   const { isSimulating, toggleSimulation, simulationSpeed, setSimulationSpeed } = useSimulation();
-  const [route, setRoute] = useState<StudioRoute>('bench');
+  const [route, setRoute] = useState<StudioRoute>('overview');
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [benchTopic, setBenchTopic] = useState<StudioBenchTopic>('conventional-am');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [resetKey, setResetKey] = useState<number>(0);
@@ -197,13 +198,13 @@ function AppContent() {
             )}
           </div>
 
-          {/* Laboratory Topics Navigation */}
+          {/* Primary navigation */}
           <nav className="space-y-1 w-full">
-            {LAB_TOPICS.filter((item) => item.id !== 'overview' && item.id !== 'comparison').map(
+            {LAB_TOPICS.filter((item) => item.id === 'overview' || item.id === 'conventional-am' || item.id === 'comparison').map(
               (item) => {
                 const Icon = item.icon;
-                const isActive = activeNavId === item.id;
-                const fullTitle = item.num ? `${item.num}. ${item.label}` : item.label;
+                const isActive = item.id === 'conventional-am' ? route === 'bench' : activeNavId === item.id;
+                const fullTitle = item.id === 'overview' ? 'Explore' : item.id === 'conventional-am' ? 'Experiments' : 'Compare';
                 return (
                   <button
                     key={item.id}
@@ -226,9 +227,6 @@ function AppContent() {
                       <div className="min-w-0">
                         <div className={`text-xs truncate ${isActive ? 'font-bold' : 'font-medium'}`}>
                           {fullTitle}
-                        </div>
-                        <div className="text-[10px] text-slate-400 truncate">
-                          <LatexText text={item.sublabel} />
                         </div>
                       </div>
                     )}
@@ -313,7 +311,7 @@ function AppContent() {
 
           {/* Right: Speed Selector (0.2x, 0.5x, 1x, 2x) + Pause/Play + Reset */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center bg-white p-0.5 rounded-lg border border-slate-200 text-[11px] font-mono">
+            {settingsOpen && <div className="flex items-center bg-white p-0.5 rounded-lg border border-slate-200 text-[11px] font-mono">
               {[0.2, 0.5, 1, 2].map((spd) => (
                 <button
                   key={spd}
@@ -328,7 +326,7 @@ function AppContent() {
                   {spd}x
                 </button>
               ))}
-            </div>
+            </div>}
 
             <button
               onClick={toggleSimulation}
@@ -360,7 +358,8 @@ function AppContent() {
               <span className="hidden sm:inline">Reset</span>
             </button>
 
-            <button
+            <button onClick={() => setSettingsOpen((v) => !v)} className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600" aria-label="Settings" title="Settings"><Settings2 className="w-4 h-4" /></button>
+            {settingsOpen && <button
               onClick={() => setDarkMode((d) => !d)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-[#111827] transition-colors cursor-pointer whitespace-nowrap shrink-0"
               title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -377,7 +376,7 @@ function AppContent() {
                   <span className="hidden md:inline">Dark</span>
                 </>
               )}
-            </button>
+            </button>}
           </div>
         </header>
 

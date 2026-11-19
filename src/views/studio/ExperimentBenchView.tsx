@@ -113,6 +113,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
   const { animTime, isSimulating, simulationSpeed, triggerLocked, toggleTriggerLock } =
     useSimulation();
   const [subTab, setSubTab] = useState<BenchSubTab>('instrument');
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
   useEffect(() => {
     if (
@@ -1459,18 +1460,14 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
       {/* Compact Editorial Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-0.5">
-          <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-slate-500">
-            THE EXPERIMENT BENCH / {stepMeta.num}
-          </div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-slate-500">EXPERIMENTS / {stepMeta.num}</div>
           <h1 className="text-2xl font-bold tracking-tight text-[#111827]">
             {stepMeta.fullTitle}{' '}
             <span className="font-serif italic font-normal text-[#1E4620]">
               {stepMeta.accentWord}
             </span>
           </h1>
-          <p className="text-xs text-slate-500">
-            <LatexText text={stepMeta.tagline} />
-          </p>
+          <p className="text-xs text-slate-500">Adjust the signal controls and watch how the output changes.</p>
         </div>
 
         <div className="text-right font-serif text-2xl text-slate-300 tabular-nums shrink-0 hidden sm:block">
@@ -1512,21 +1509,21 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
         <div className="flex items-center gap-6 border-b border-slate-200 overflow-x-auto">
           {(
             [
-              { id: 'instrument' as BenchSubTab, label: 'Simulation' },
+              { id: 'instrument' as BenchSubTab, label: 'Signal' },
               ...(activeTopic === 'conventional-am' ||
               activeTopic === 'dsb-sc' ||
               activeTopic === 'ssb' ||
               activeTopic === 'vsb'
-                ? [{ id: 'audio-lab' as BenchSubTab, label: 'Real-World Audio Demo' }]
+                ? [{ id: 'audio-lab' as BenchSubTab, label: 'Audio demo' }]
                 : []),
-              {
+              ...(advancedOpen ? [{
                 id: 'receiver' as BenchSubTab,
                 label:
                   activeTopic === 'motivation'
                     ? 'Baseband, antenna & channels'
-                    : 'Modulation & Demodulation',
-              },
-              { id: 'equations' as BenchSubTab, label: 'Theory' },
+                    : 'Circuit & receiver',
+              }] : []),
+              { id: 'equations' as BenchSubTab, label: 'Learn' },
             ] as { id: BenchSubTab; label: string }[]
           ).map((tab) => {
             const active = subTab === tab.id;
@@ -1544,6 +1541,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
               </button>
             );
           })}
+          <button onClick={() => { setAdvancedOpen((v) => !v); if (subTab === 'receiver') setSubTab('instrument'); }} className="ml-auto pb-2 text-xs font-semibold text-slate-500 whitespace-nowrap hover:text-[#1E4620]">{advancedOpen ? 'Hide advanced' : 'Advanced'}</button>
         </div>
       )}
 
@@ -1973,7 +1971,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-xs font-bold text-[#111827]">
                       <Sliders className="w-3.5 h-3.5 text-[#1E4620]" />
-                      <span>Signal parameters</span>
+                      <span>Adjust the signal</span>
                     </div>
                     <button
                       onClick={() => setParamsCollapsed(true)}
@@ -2119,7 +2117,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       unit="kHz"
                       onChange={setFc}
                     />
-                    <DarkSlider
+                    {advancedOpen && <DarkSlider
                       label="Carrier Amplitude $A_c$"
                       value={Ac}
                       min={0.5}
@@ -2127,7 +2125,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       step={0.1}
                       unit="V"
                       onChange={setAc}
-                    />
+                    />}
                     <DarkSlider
                       label="Modulation Index $\mu$"
                       value={mu}
@@ -2138,7 +2136,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       maxLabel="1.5 (over)"
                       onChange={setMu}
                     />
-                    <DarkSegmented
+                    {advancedOpen && <DarkSegmented
                       label="Modulator Topology"
                       value={amModulatorMode}
                       onChange={setAmModulatorMode}
@@ -2146,10 +2144,10 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         { value: 'linear', label: 'Multiplier' },
                         { value: 'square-law', label: 'Square-Law' },
                       ]}
-                    />
+                    />}
 
-                    <DarkSectionHeader index="03" title="ENVELOPE DEMODULATOR" />
-                    <DarkSlider
+                    {advancedOpen && <DarkSectionHeader index="03" title="ENVELOPE DEMODULATOR" />}
+                    {advancedOpen && <DarkSlider
                       label="Time Constant $\tau = RC$"
                       value={rcTimeMs}
                       min={0.05}
@@ -2159,7 +2157,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       minLabel="0.05 ms"
                       maxLabel="2.0 ms"
                       onChange={handleRcSliderChange}
-                    />
+                    />}
                   </div>
                 )}
 
@@ -2199,7 +2197,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       unit="kHz"
                       onChange={setFc}
                     />
-                    <DarkSegmented
+                    {advancedOpen && <DarkSegmented
                       label="Topology"
                       value={dsbTopology}
                       onChange={setDsbTopology}
@@ -2207,8 +2205,8 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         { value: 'product', label: 'Product' },
                         { value: 'ring', label: '4-Diode Ring' },
                       ]}
-                    />
-                    {dsbTopology === 'ring' && (
+                    />}
+                    {advancedOpen && dsbTopology === 'ring' && (
                       <DarkSegmented
                         label="Ring Output BPF"
                         value={ringFiltered ? 'bpf' : 'raw'}
@@ -2220,8 +2218,8 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       />
                     )}
 
-                    <DarkSectionHeader index="03" title="DEMODULATOR" />
-                    <DarkSegmented
+                    {advancedOpen && <DarkSectionHeader index="03" title="DEMODULATOR" />}
+                    {advancedOpen && <DarkSegmented
                       label="Receiver Architecture"
                       value={dsbRxMode}
                       onChange={setDsbRxMode}
@@ -2229,8 +2227,8 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         { value: 'coherent', label: 'Coherent LO' },
                         { value: 'costas', label: 'Costas Loop' },
                       ]}
-                    />
-                    {dsbRxMode === 'coherent' ? (
+                    />}
+                    {advancedOpen && (dsbRxMode === 'coherent' ? (
                       <>
                         <DarkSlider
                           label="LO Phase Error $\phi$"
@@ -2273,7 +2271,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                           onChange={setCostasGain}
                         />
                       </>
-                    )}
+                    ))}
                   </div>
                 )}
 
@@ -2290,7 +2288,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         { value: 'LSB', label: 'LSB ($f_c-f_m$)' },
                       ]}
                     />
-                    <DarkSegmented
+                    {advancedOpen && <DarkSegmented
                       label="Generation Method"
                       value={ssbMethod}
                       onChange={setSsbMethod}
@@ -2298,7 +2296,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         { value: 'phase', label: 'Hilbert Phase' },
                         { value: 'frequency', label: 'BPF Filter' },
                       ]}
-                    />
+                    />}
 
                     <DarkSectionHeader index="02" title="FREQUENCIES" />
                     <DarkSlider
@@ -2322,8 +2320,8 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       onChange={setFc}
                     />
 
-                    <DarkSectionHeader index="03" title="FILTER & DEMODULATOR" />
-                    {ssbMethod === 'frequency' && (
+                    {advancedOpen && <DarkSectionHeader index="03" title="FILTER & DEMODULATOR" />}
+                    {advancedOpen && ssbMethod === 'frequency' && (
                       <>
                         <DarkSlider
                           label="BPF Filter Order"
@@ -2344,7 +2342,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                         />
                       </>
                     )}
-                    <DarkSlider
+                    {advancedOpen && <DarkSlider
                       label="LO Phase Error $\phi$"
                       value={ssbPhaseErrDeg}
                       min={-90}
@@ -2352,7 +2350,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       step={5}
                       unit="°"
                       onChange={setSsbPhaseErrDeg}
-                    />
+                    />}
                   </div>
                 )}
 
@@ -2393,7 +2391,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       maxLabel="50%"
                       onChange={setVsbVestigeRatio}
                     />
-                    <DarkSlider
+                    {advancedOpen && <DarkSlider
                       label="Symmetry Skew"
                       value={vsbSkew}
                       min={-0.35}
@@ -2403,9 +2401,9 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       minLabel="-0.35"
                       maxLabel="+0.35"
                       onChange={setVsbSkew}
-                    />
+                    />}
 
-                    <button
+                    {advancedOpen && <button
                       onClick={() => {
                         setVsbVestigeRatio(0.18);
                         setVsbSkew(0);
@@ -2413,7 +2411,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
                       className="w-full py-2 px-3 rounded-lg bg-[#EFF3EB] hover:bg-[#DCE5D5] border border-[#DCE5D5] text-xs font-mono font-semibold text-[#1E4620] transition-colors cursor-pointer"
                     >
                       Apply NTSC TV Standard (18% Vestige)
-                    </button>
+                    </button>}
                   </div>
                 )}
               </div>
