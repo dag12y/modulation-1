@@ -43,29 +43,29 @@ const LAB_TOPICS: {
   {
     id: 'conventional-am',
     num: '01',
-    label: 'DSB-FC (AM)',
-    sublabel: 'Envelope & Demod',
+    label: 'Conventional AM',
+    sublabel: 'DSB-FC · Envelope detection',
     icon: Activity,
   },
   {
     id: 'dsb-sc',
     num: '02',
-    label: 'DSB-SC & Costas',
-    sublabel: 'Coherent & I/Q Lock',
+    label: 'DSB-SC',
+    sublabel: 'Product modulation · Coherent detection',
     icon: Radio,
   },
   {
     id: 'ssb',
     num: '03',
-    label: 'SSB-SC',
-    sublabel: 'Hilbert & BPF Demod',
+    label: 'SSB',
+    sublabel: 'USB / LSB · Filter and phase shift',
     icon: Waves,
   },
   {
     id: 'vsb',
     num: '04',
     label: 'VSB',
-    sublabel: 'Shaping Filter $H(f)$',
+    sublabel: 'Shaping filter · Vestige',
     icon: Sliders,
   },
   {
@@ -199,41 +199,43 @@ function AppContent() {
 
           {/* Laboratory Topics Navigation */}
           <nav className="space-y-1 w-full">
-            {LAB_TOPICS.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeNavId === item.id;
-              const fullTitle = item.num ? `${item.num}. ${item.label}` : item.label;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  title={sidebarCollapsed ? `${fullTitle} — ${item.sublabel}` : undefined}
-                  className={`w-full flex items-center rounded-lg transition-colors cursor-pointer ${
-                    sidebarCollapsed ? 'justify-center h-10 px-0' : 'gap-2.5 px-2.5 py-2 text-left'
-                  } ${
-                    isActive
-                      ? 'bg-[#EFF3EB] text-[#1E4620]'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-[#111827]'
-                  }`}
-                >
-                  <Icon
-                    className={`w-[18px] h-[18px] shrink-0 ${
-                      isActive ? 'text-[#1E4620]' : 'text-slate-400'
+            {LAB_TOPICS.filter((item) => item.id !== 'overview' && item.id !== 'comparison').map(
+              (item) => {
+                const Icon = item.icon;
+                const isActive = activeNavId === item.id;
+                const fullTitle = item.num ? `${item.num}. ${item.label}` : item.label;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    title={sidebarCollapsed ? `${fullTitle} — ${item.sublabel}` : undefined}
+                    className={`w-full flex items-center rounded-lg transition-colors cursor-pointer ${
+                      sidebarCollapsed ? 'justify-center h-10 px-0' : 'gap-2.5 px-2.5 py-2 text-left'
+                    } ${
+                      isActive
+                        ? 'bg-[#EFF3EB] text-[#1E4620]'
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-[#111827]'
                     }`}
-                  />
-                  {!sidebarCollapsed && (
-                    <div className="min-w-0">
-                      <div className={`text-xs truncate ${isActive ? 'font-bold' : 'font-medium'}`}>
-                        {fullTitle}
+                  >
+                    <Icon
+                      className={`w-[18px] h-[18px] shrink-0 ${
+                        isActive ? 'text-[#1E4620]' : 'text-slate-400'
+                      }`}
+                    />
+                    {!sidebarCollapsed && (
+                      <div className="min-w-0">
+                        <div className={`text-xs truncate ${isActive ? 'font-bold' : 'font-medium'}`}>
+                          {fullTitle}
+                        </div>
+                        <div className="text-[10px] text-slate-400 truncate">
+                          <LatexText text={item.sublabel} />
+                        </div>
                       </div>
-                      <div className="text-[10px] text-slate-400 truncate">
-                        <LatexText text={item.sublabel} />
-                      </div>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+                    )}
+                  </button>
+                );
+              }
+            )}
           </nav>
         </div>
 

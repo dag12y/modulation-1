@@ -112,15 +112,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
 }) => {
   const { animTime, isSimulating, simulationSpeed, triggerLocked, toggleTriggerLock } =
     useSimulation();
-  const isAudioLabTopic =
-    activeTopic === 'conventional-am' ||
-    activeTopic === 'dsb-sc' ||
-    activeTopic === 'ssb' ||
-    activeTopic === 'vsb';
-
-  const [subTab, setSubTab] = useState<BenchSubTab>(
-    isAudioLabTopic ? 'audio-lab' : 'instrument'
-  );
+  const [subTab, setSubTab] = useState<BenchSubTab>('instrument');
 
   useEffect(() => {
     if (
@@ -129,7 +121,7 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
       activeTopic === 'ssb' ||
       activeTopic === 'vsb'
     ) {
-      setSubTab('audio-lab');
+      setSubTab('instrument');
     } else {
       setSubTab((prev) => (prev === 'audio-lab' ? 'instrument' : prev));
     }
@@ -1515,35 +1507,26 @@ export const ExperimentBenchView: React.FC<ExperimentBenchViewProps> = ({
         </div>
       )}
 
-      {/* Underline Sub-Tabs */}
+      {/* Presentation tabs: signal simulation, circuit demonstration, and theory */}
       {!plotExpanded && (
         <div className="flex items-center gap-6 border-b border-slate-200 overflow-x-auto">
           {(
             [
-              ...(isAudioLabTopic
-                ? [
-                    {
-                      id: 'audio-lab' as BenchSubTab,
-                      label:
-                        activeTopic === 'conventional-am'
-                          ? 'AM Receiver Demo (Audio & FFT)'
-                          : activeTopic === 'dsb-sc'
-                          ? 'DSB-SC & Costas Lab (Audio & FFT)'
-                          : activeTopic === 'ssb'
-                          ? 'SSB-SC & Hilbert Lab (Audio & FFT)'
-                          : 'VSB Shaping Lab (Audio & FFT)',
-                    },
-                  ]
+              { id: 'instrument' as BenchSubTab, label: 'Simulation' },
+              ...(activeTopic === 'conventional-am' ||
+              activeTopic === 'dsb-sc' ||
+              activeTopic === 'ssb' ||
+              activeTopic === 'vsb'
+                ? [{ id: 'audio-lab' as BenchSubTab, label: 'Real-World Audio Demo' }]
                 : []),
-              { id: 'instrument' as BenchSubTab, label: 'Modulation & demodulation' },
               {
                 id: 'receiver' as BenchSubTab,
                 label:
                   activeTopic === 'motivation'
                     ? 'Baseband, antenna & channels'
-                    : 'Circuit & analytical curves',
+                    : 'Modulation & Demodulation',
               },
-              { id: 'equations' as BenchSubTab, label: 'Equations & power' },
+              { id: 'equations' as BenchSubTab, label: 'Theory' },
             ] as { id: BenchSubTab; label: string }[]
           ).map((tab) => {
             const active = subTab === tab.id;
